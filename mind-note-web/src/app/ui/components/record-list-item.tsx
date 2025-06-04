@@ -2,12 +2,12 @@
 
 import Link from 'next/link';
 
-type Record = {
+export type Record = {
   id: string;
   chatId: string;
   title: string;
   content: string;
-  emotion: string;
+  emotion: 'UNSPECIFIED' | 'POSITIVE' | 'NEGATIVE' | 'NEUTRAL';
   detailEmotion: string;
   tags: string[];
   createdAt: string;
@@ -24,7 +24,6 @@ export default function RecordListItem({ records }: { records: Record[] }) {
         const query = new URLSearchParams({
           id: record.id,
           title: record.title,
-          content: record.content,
           emotion: record.emotion,
         }).toString();
 
@@ -35,7 +34,7 @@ export default function RecordListItem({ records }: { records: Record[] }) {
             className="px-4 py-2 bg-gray-100 rounded-lg w-full max-w-md shadow-sm flex flex-col items-start hover:bg-gray-200 transition"
           >
             <div className="font-semibold text-lg">{record.title}</div>
-            <div className="text-sm text-gray-500 truncate w-full">{record.content}</div>
+            <div className="text-sm text-gray-500 line-clamp-2">{record.content}</div>
             <div className="text-xs text-gray-400 mt-1">{new Date(record.createdAt).toLocaleDateString()}</div>
           </Link>
         );
