@@ -9,7 +9,7 @@ export type Record = {
   title: string;
   content: string;
   emotion: 'UNSPECIFIED' | 'POSITIVE' | 'NEGATIVE' | 'NEUTRAL';
-  detailEmotion: string;
+  detailEmotion: 'angry' | 'sad' | 'joy' | 'bored' | 'anxiety' | 'etc';
   tags: string[];
   createdAt: string;
 };
@@ -32,7 +32,7 @@ const dummyDailyRecords: DailyRecord[] = [
         title: '참새 관찰',
         content: '벤치 옆 나무에 앉아 있었음',
         emotion: 'POSITIVE',
-        detailEmotion: '평온함',
+        detailEmotion: 'angry',
         tags: ['참새', '자연'],
         createdAt: new Date().toISOString(),
       },
@@ -48,7 +48,7 @@ const dummyDailyRecords: DailyRecord[] = [
         title: '까치 봄',
         content: '도서관 앞에서 까치 소리 들음',
         emotion: 'NEUTRAL',
-        detailEmotion: '관심',
+        detailEmotion: 'joy',
         tags: ['까치', '소리'],
         createdAt: new Date().toISOString(),
       },
@@ -64,7 +64,7 @@ const dummyDailyRecords: DailyRecord[] = [
         title: '직박구리 관찰',
         content: '지저귐이 활기참',
         emotion: 'POSITIVE',
-        detailEmotion: '즐거움',
+        detailEmotion: 'sad',
         tags: ['직박구리'],
         createdAt: new Date().toISOString(),
       },
