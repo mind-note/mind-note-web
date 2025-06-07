@@ -37,10 +37,12 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white">
+    <div className="flex flex-col h-screen bg-white pb-[88px]"> {/* ✅ tabbar 높이 정확히 맞춤 */}
       <ChatHeader name="Brooke Davis" />
       <ChatMessages messages={messages} />
-      <ChatInput onSend={handleSend} />
+      <div className="fixed bottom-[64px] left-0 right-0 max-w-md mx-auto w-full px-4"> {/* ✅ 탭바(64px) 위 정확한 위치 */}
+        <ChatInput onSend={handleSend} />
+      </div>
     </div>
   );
 }
