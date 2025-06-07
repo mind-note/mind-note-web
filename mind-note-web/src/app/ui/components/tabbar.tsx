@@ -6,9 +6,9 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/app/utils/style/helper';
 
 const tabs = [
-  { name: '홈', href: '/home' },
-  { name: '조류충돌', href: '/birdstrike' },
-  { name: '기록', href: '/record' },
+  { name: 'home', href: '/home' },
+  { name: 'chat', href: '/chat' },
+  { name: 'setting', href: '/setting' },
 ];
 
 export default function TabBar() {
