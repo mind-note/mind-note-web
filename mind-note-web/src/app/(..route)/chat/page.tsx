@@ -1,48 +1,41 @@
-// app/chat/page.tsx
-'use client';
+import Link from 'next/link';
+import { fetchChatList } from '@/app/business/chat/chat.service';
 
-import ChatHeader from '@/app/ui/components/chat/ChatHeader';
-import ChatInput from '@/app/ui/components/chat/ChatInput';
-import ChatMessages from '@/app/ui/components/chat/ChatMessages';
-import { useState } from 'react';
+interface ChatItem {
+  id: string;
+  title: string;
+  emotionKeyword: string;
+  createdAt: string;
+}
 
-export default function ChatPage() {
-  const [messages, setMessages] = useState<{
-    role: 'user' | 'bot';
-    name: string;
-    text: string;
-  }[]>([
-    { role: 'bot', name: 'Brooke', text: "Hey Lucas!" },
-    { role: 'bot', name: 'Brooke', text: "How's your project going?" },
-    { role: 'user', name: 'Lucas', text: "Hi Brooke!" },
-    { role: 'user', name: 'Lucas', text: "It's going well. Thanks for asking!" },
-    { role: 'bot', name: 'Brooke', text: "No worries. Let me know if you need any help 😉" },
-    { role: 'user', name: 'Lucas', text: "You're the best!" },
-  ]);
-
-  const handleSend = (text: string) => {
-    setMessages((prev) => [...prev, { role: 'user', name: 'Lucas', text }]);
-
-    // 👇 임시 봇 응답
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'bot',
-          name: 'Brooke',
-          text: "I'll get back to you on that! 🤖",
-        },
-      ]);
-    }, 500);
-  };
+export default async function ChatListPage() {
+  const chats: ChatItem[] = await fetchChatList();
 
   return (
-    <div className="flex flex-col h-screen bg-white pb-[88px]"> {/* ✅ tabbar 높이 정확히 맞춤 */}
-      <ChatHeader name="Brooke Davis" />
-      <ChatMessages messages={messages} />
-      <div className="fixed bottom-[64px] left-0 right-0 max-w-md mx-auto w-full px-4"> {/* ✅ 탭바(64px) 위 정확한 위치 */}
-        <ChatInput onSend={handleSend} />
+    <div className="max-w-md mx-auto p-6">
+      <h1 className="text-xl font-semibold mb-4">💬 대화 목록</h1>
+
+      <div className="space-y-4">
+        {chats.map((chat) => (
+          <Link
+            key={chat.id}
+            href={`/chat/${chat.id}`}
+            className="block p-4 rounded-lg border hover:bg-gray-50"
+          >
+            <div className="text-sm text-gray-500">
+              감정: {chat.emotionKeyword} | 생성일: {new Date(chat.createdAt).toLocaleString()}
+            </div>
+            <div className="font-medium text-base">{chat.title}</div>
+          </Link>
+        ))}
       </div>
+
+      <Link
+        href="/chat/keywords"
+        className="mt-6 block w-full bg-purple-600 text-white text-center py-3 rounded-lg font-semibold"
+      >
+        + 새 대화 시작하기
+      </Link>
     </div>
   );
 }

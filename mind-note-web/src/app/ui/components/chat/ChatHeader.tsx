@@ -1,12 +1,28 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+
 interface ChatHeaderProps {
   name: string;
+  chatId: string;
 }
 
-export default function ChatHeader({ name }: ChatHeaderProps) {
+export default function ChatHeader({ name, chatId }: ChatHeaderProps) {
+  const router = useRouter();
+
+  const handleCreateDiary = () => {
+    router.push(`/chat/feedback?chatId=${chatId}`);
+  };
+
   return (
     <div className="flex items-center justify-between px-4 py-3 border-b">
       <div className="font-semibold">{name}</div>
-      <div className="rounded-full bg-slate-100 w-8 h-8" />
+      <button
+        onClick={handleCreateDiary}
+        className="text-sm text-purple-600 font-medium hover:underline"
+      >
+        일기 생성
+      </button>
     </div>
   );
 }

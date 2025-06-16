@@ -1,144 +1,96 @@
-// app/chat/keywords/page.tsx
 'use client';
 
-import TextNoteInput from '@/app/ui/components/keywords/TextNoteInput';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import TextNoteInput from '@/app/ui/components/keywords/TextNoteInput';
+import { createClientHttpInstance } from '@/app/utils/http/client-instance';
+import { API_PATH } from '@/app/utils/http/api-query';
 
+type EmotionKeyword = 'UNSPECIFIED' | 'HAPPY' | 'SAD' | 'ANGRY' | 'SURPRISED' | 'INTERESTED' | 'BORED';
 
-interface KeywordSelectorProps {
-  selected: string[];
-  onToggle: (keyword: string) => void;
-  onAdd: (keyword: string) => void;
-  onClear: () => void;
-}
-
-const allKeywords = [
-  'Work', 'Hobbies', 'Family', 'Breakup', 'Weather', 'Wife', 'Party', 'Love',
-  'Self esteem', 'Sleep', 'Social', 'Food', 'Distant', 'Content', 'Exams'
+const emotionOptions: { key: EmotionKeyword; label: string }[] = [
+  { key: 'UNSPECIFIED', label: '미지정' },
+  { key: 'HAPPY', label: '기쁨' },
+  { key: 'SAD', label: '슬픔' },
+  { key: 'ANGRY', label: '화남' },
+  { key: 'SURPRISED', label: '놀람' },
+  { key: 'INTERESTED', label: '흥미' },
+  { key: 'BORED', label: '지루함' },
 ];
 
-const KeywordSelector = ({ selected, onToggle, onAdd, onClear }: KeywordSelectorProps) => {
-  const [input, setInput] = useState('');
-
-  const handleAdd = () => {
-    const trimmed = input.trim();
-    if (trimmed && !selected.includes(trimmed)) {
-      onAdd(trimmed);
-      setInput('');
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
-        placeholder="Search & add reasons"
-        className="w-full border rounded-full px-4 py-2 text-sm"
-      />
-
-      <div className="flex justify-between items-center text-sm font-medium">
-        <span>Selected ({selected.length})</span>
-        <button onClick={onClear} className="text-gray-600 hover:underline">
-          Clear all
-        </button>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        {selected.map((keyword) => (
-          <div
-            key={keyword}
-            className="flex items-center gap-1 px-3 py-1 rounded-full bg-white border text-sm"
-          >
-            {keyword}
-            <button
-              onClick={() => onToggle(keyword)}
-              className="w-4 h-4 rounded-full bg-gray-300 text-xs flex items-center justify-center"
-            >
-              ×
-            </button>
-          </div>
-        ))}
-      </div>
-
-      <div className="space-y-2">
-        <div className="text-sm font-medium text-gray-600">All reasons</div>
-        <div className="flex flex-wrap gap-2">
-          {allKeywords.map((word) => (
-            <button
-              key={word}
-              onClick={() => onAdd(word)}
-              className={`px-3 py-1 text-sm rounded-full border ${
-                selected.includes(word) ? 'bg-purple-600 text-white' : 'bg-white text-gray-700'
-              }`}
-            >
-              {word}
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export default function KeywordPage() {
-  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
-  const [textNote, setTextNote] = useState('');
-  const maxNoteLength = 200;
+  const [emotionKeyword, setEmotionKeyword] = useState<EmotionKeyword | ''>('');
+  const [additionalKeyword, setAdditionalKeyword] = useState('');
+  const [description, setDescription] = useState('');
+  const router = useRouter();
 
-  const handleKeywordToggle = (keyword: string) => {
-    setSelectedKeywords((prev) =>
-      prev.includes(keyword)
-        ? prev.filter((k) => k !== keyword)
-        : [...prev, keyword]
-    );
-  };
-
-  const handleKeywordAdd = (keyword: string) => {
-    if (!selectedKeywords.includes(keyword)) {
-      setSelectedKeywords((prev) => [...prev, keyword]);
+  const handleSubmit = async () => {
+    if (!emotionKeyword || !additionalKeyword.trim() || !description.trim()) {
+      alert('감정, 추가 키워드, 설명을 모두 입력해주세요.');
+      return;
     }
-  };
 
-  const handleKeywordClear = () => {
-    setSelectedKeywords([]);
-  };
+    try {
+      const client = createClientHttpInstance();
+      const res = await client.post(`${API_PATH}/chat`, {
+        emotionKeyword,
+        additionalKeyword,
+        description,
+      });
 
-  const handleSubmit = () => {
-    const payload = {
-      keywords: selectedKeywords,
-      note: textNote,
-    };
-    console.log('📝 Submit keywords + note:', payload);
+      router.push(`/chat/${res.data.id}`);
+    } catch (e) {
+      console.error('채팅 생성 실패:', e);
+      alert('채팅 생성에 실패했습니다.');
+    }
   };
 
   return (
     <div className="flex flex-col gap-6 p-6 max-w-md mx-auto">
-      <KeywordSelector
-        selected={selectedKeywords}
-        onToggle={handleKeywordToggle}
-        onAdd={handleKeywordAdd}
-        onClear={handleKeywordClear}
-      />
+      <div className="space-y-4">
+        <div className="text-sm font-medium text-gray-600">감정 키워드 선택</div>
+        <div className="flex flex-wrap gap-2">
+          {emotionOptions.map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => setEmotionKeyword(key)}
+              className={`px-3 py-1 text-sm rounded-full border ${
+                emotionKeyword === key ? 'bg-purple-600 text-white' : 'bg-white text-gray-700'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
 
-      <TextNoteInput
-        value={textNote}
-        onChange={setTextNote}
-        maxLength={maxNoteLength}
-      />
+        <input
+          type="text"
+          value={additionalKeyword}
+          onChange={(e) => setAdditionalKeyword(e.target.value)}
+          placeholder="추가 키워드 입력"
+          className="w-full border px-3 py-2 rounded text-sm"
+        />
 
-      <button
-        onClick={handleSubmit}
-        className="bg-purple-600 text-white py-3 rounded-lg text-sm font-semibold"
-      >
-        Save
-      </button>
+        <TextNoteInput
+          value={description}
+          onChange={setDescription}
+          maxLength={200}
+        />
 
-      <button className="text-purple-500 text-sm text-center mt-[-8px]">
-        Skip and Save
-      </button>
+        <button
+          onClick={handleSubmit}
+          className="bg-purple-600 text-white py-3 rounded-lg text-sm font-semibold"
+        >
+          Save
+        </button>
+
+        <button
+          onClick={handleSubmit}
+          className="text-purple-500 text-sm text-center mt-[-8px]"
+        >
+          Skip and Save
+        </button>
+      </div>
     </div>
   );
 }

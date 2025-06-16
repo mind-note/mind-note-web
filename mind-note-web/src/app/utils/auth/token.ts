@@ -1,7 +1,7 @@
 // utils/token.ts
 import Cookies from 'js-cookie';
 
-const TOKEN_KEY = 'token';
+const TOKEN_KEY = 'accessToken';
 
 export const getAccessToken = () => Cookies.get(TOKEN_KEY);
 
