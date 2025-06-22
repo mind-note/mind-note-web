@@ -3,7 +3,16 @@
 import { useEffect, useState } from 'react';
 import RecordListItem from '../../components/record-list-item';
 
-import type { Record } from '../../components/record-list-item';
+export type Record = {
+  id: string;
+  chatId: string;
+  title: string;
+  content: string;
+  emotion: 'UNSPECIFIED' | 'POSITIVE' | 'NEGATIVE' | 'NEUTRAL';
+  detailEmotion: 'angry' | 'sad' | 'joy' | 'bored' | 'anxiety' | 'etc';
+  tags: string[];
+  createdAt: string;
+};
 
 type DailyRecord = {
   date: number;
@@ -23,7 +32,7 @@ const dummyDailyRecords: DailyRecord[] = [
         title: '참새 관찰',
         content: '나무에 앉아있는 참새를 봤어요.',
         emotion: 'POSITIVE',
-        detailEmotion: '기쁨',
+        detailEmotion: 'joy',
         tags: ['참새', '자연'],
         createdAt: new Date().toISOString(),
       },
@@ -39,7 +48,7 @@ const dummyDailyRecords: DailyRecord[] = [
         title: '까치 울음소리',
         content: '도서관 근처에서 까치 소리가 들렸어요.',
         emotion: 'NEUTRAL',
-        detailEmotion: '호기심',
+        detailEmotion: 'sad',
         tags: ['까치', '소리'],
         createdAt: new Date().toISOString(),
       },
@@ -55,7 +64,7 @@ const dummyDailyRecords: DailyRecord[] = [
         title: '직박구리와 아침',
         content: '아침 산책 중 직박구리를 봤어요.',
         emotion: 'POSITIVE',
-        detailEmotion: '상쾌함',
+        detailEmotion: 'joy',
         tags: ['직박구리'],
         createdAt: new Date().toISOString(),
       },

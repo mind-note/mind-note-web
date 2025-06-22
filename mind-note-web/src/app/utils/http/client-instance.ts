@@ -1,24 +1,19 @@
+// utils/http/client-instance.ts
 import axios, { AxiosInstance } from 'axios';
-import { cookies } from 'next/headers';
 import Cookies from 'js-cookie';
 import { refreshAccessToken } from '../auth/refresh';
-import { redirect } from 'next/navigation'; // ✅ 서버 리디렉트용
 
-export const createHttpInstance = (isServer: boolean): AxiosInstance => {
+export const createClientHttpInstance = (): AxiosInstance => {
   const instance = axios.create({
     withCredentials: true,
   });
 
   instance.interceptors.request.use((config) => {
-    const token = isServer
-      ? cookies().get('accessToken')?.value
-      : Cookies.get('accessToken');
-//console.log(`[Axios Request] (${isServer ? 'SSR' : 'Client'}) accessToken:`, token);
-
+    const token = Cookies.get('accessToken_client');
+    //console.log('[Client Axios] accessToken_client:', token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-
     return config;
   });
 
@@ -27,8 +22,7 @@ export const createHttpInstance = (isServer: boolean): AxiosInstance => {
     async (error) => {
       const originalRequest = error.config;
 
-      // ✅ 클라이언트에서 401 → 토큰 갱신 시도
-      if (error.response?.status === 401 && !originalRequest._retry && !isServer) {
+      if (error.response?.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
 
         const newAccessToken = await refreshAccessToken();
@@ -39,13 +33,8 @@ export const createHttpInstance = (isServer: boolean): AxiosInstance => {
         }
 
         Cookies.remove('accessToken');
-        alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+        alert('로그인이 만료되었습니다. 로그인 페이지로 이동합니다.');
         window.location.href = '/';
-      }
-
-      // ✅ 서버에서 401 → 바로 리디렉트
-      if (error.response?.status === 401 && isServer) {
-        throw new Error('UNAUTHORIZED');
       }
 
       return Promise.reject(error);
