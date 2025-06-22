@@ -21,7 +21,6 @@ export default function ChatInput({ onSend, disabled = false, sending = false }:
 
   return (
     <form onSubmit={handleSubmit} className="flex items-center px-4 py-3 border-t bg-white">
-      <button type="button" disabled className="text-blue-500 text-2xl mr-2">＋</button>
       <input
         type="text"
         value={text}
@@ -32,7 +31,7 @@ export default function ChatInput({ onSend, disabled = false, sending = false }:
       />
       <button
         type="submit"
-        className="ml-2 bg-purple-600 text-white px-4 py-2 rounded-full text-sm font-semibold disabled:opacity-50 flex items-center gap-2"
+        className="ml-2 bg-black text-white px-4 py-2 rounded-full text-sm font-semibold disabled:opacity-50 flex items-center gap-2"
         disabled={disabled}
       >
         {sending ? (

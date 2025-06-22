@@ -67,8 +67,8 @@ export default function ChatPage() {
 
       setMessages((prev) => [
         ...prev,
-        { role: 'user', name: 'Lucas', text: userMsg.content },
-        { role: 'bot', name: 'Brooke', text: friendMsg.content },
+        { role: 'user', name: '', text: userMsg.content },
+        { role: 'bot', name: 'gpt', text: friendMsg.content },
       ]);
     } catch (e) {
       console.error('[sendMessage] 오류:', e);
