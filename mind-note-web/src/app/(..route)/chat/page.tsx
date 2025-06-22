@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import Link from 'next/link';
 import { fetchChatList } from '@/app/business/chat/chat.service';
 

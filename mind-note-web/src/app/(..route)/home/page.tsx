@@ -1,4 +1,4 @@
-
+export const dynamic = 'force-dynamic';
 import { fetchDiaryList } from '@/app/business/diary/diary.service';
 import MonthCalendar from '@/app/ui/molecule/calendar/month-calendar';
 
