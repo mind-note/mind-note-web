@@ -1,20 +1,13 @@
-// src/app/settings/page.tsx
 'use client';
 
+import { fetchUserInfo, updateUserMbti } from '@/app/business/user/user.service';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 
 type User = {
   id: string;
   name: string;
   userMbti: string;
   friendMbti: string;
-};
-
-type UserUpdatePayload = {
-  name?: string;
-  userMbti?: string;
-  friendMbti?: string;
 };
 
 export default function SettingsPage() {
@@ -24,33 +17,25 @@ export default function SettingsPage() {
   const [friendMbti, setFriendMbti] = useState('');
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await axios.get('/user');
-        const userData: User = {
-          id: res.data.id,
-          name: res.data.name,
-          userMbti: res.data.userMbti,
-          friendMbti: res.data.friendMbti,
-        };
+  fetchUserInfo()
+    .then((userData) => {
+      if (userData) {
         setUser(userData);
         setUserMbti(userData.userMbti);
         setFriendMbti(userData.friendMbti);
-      } catch (err) {
-        console.error('유저 정보 불러오기 실패:', err);
+      } else {
+        console.warn('userData가 null입니다.');
       }
-    };
-    fetchUser();
-  }, []);
+    })
+    .catch((err) => {
+      console.error('유저 정보 불러오기 실패:', err);
+    });
+}, []);
+
 
   const handleSave = async () => {
-    const payload: UserUpdatePayload = {
-      userMbti,
-      friendMbti,
-    };
-
     try {
-      await axios.patch('/user', payload);
+      await updateUserMbti({ userMbti, friendMbti });
       setEditing(false);
       location.reload();
     } catch (err) {
@@ -63,8 +48,11 @@ export default function SettingsPage() {
 
   return (
     <div className="flex flex-col max-w-md mx-auto px-4 py-6 space-y-6">
+      {/* 최상단 설정 제목 */}
+      <h1 className="text-2xl font-bold text-center mb-4">설정</h1>
+
       <div className="text-center">
-        <h1 className="text-xl font-bold">{user.name}</h1>
+        <h2 className="text-xl font-bold">{user.name}</h2>
         <p className="text-sm text-gray-500">@{user.id}</p>
       </div>
 

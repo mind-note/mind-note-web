@@ -30,7 +30,7 @@ export default function TabBar() {
               href={tab.href}
               className={cn(
                 'text-center flex-1 py-2 text-sm',
-                isActive ? 'text-birdGreen600 font-bold' : 'text-gray-500'
+                isActive ? 'text-black font-bold' : 'text-gray-500'
               )}
             >
               {tab.name}

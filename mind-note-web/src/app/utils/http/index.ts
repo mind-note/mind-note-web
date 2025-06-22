@@ -13,7 +13,7 @@ export const createHttpInstance = (isServer: boolean): AxiosInstance => {
     const token = isServer
       ? cookies().get('accessToken')?.value
       : Cookies.get('accessToken');
-console.log(`[Axios Request] (${isServer ? 'SSR' : 'Client'}) accessToken:`, token);
+//console.log(`[Axios Request] (${isServer ? 'SSR' : 'Client'}) accessToken:`, token);
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

@@ -40,7 +40,7 @@ export default function FeedbackPage() {
 
     try {
       setSubmitting(true);
-      const token = Cookies.get('accessToken');
+      const token = Cookies.get('accessToken_client');
 
       await axios.post(
         `${API_PATH}/diary`,

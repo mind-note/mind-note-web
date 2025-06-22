@@ -9,6 +9,18 @@ const instance = createHttpInstance(true); // ✅ 서버 전용 인스턴스
 const client = createClientHttpInstance()
 
 
+interface Diary {
+  id: string;
+  chatId: string;
+  title: string;
+  content: string;
+  emotion: 'UNSPECIFIED' | 'POSITIVE' | 'NEGATIVE' | 'NEUTRAL';
+  detailEmotion: string;
+  additionalKeyword: string;
+  contentKeyword: string;
+  createdAt: string;
+}
+
 // ✅ 채팅 생성
 export async function createDiary({
   chatId,
@@ -58,5 +70,31 @@ export async function fetchDiaryList(year: number, month: number) {
     console.error('[fetchDiaryList] 일기 목록 조회 에러:', error);
     return [];
   }
+
 }
+
+
+export async function fetchDiaryDetail(diaryId: string): Promise<Diary | null> {
+  try {
+    const res = await instance.get(`${API_PATH}/diary/${diaryId}`);
+
+    const data = res.data;
+
+    return {
+      id: data.id,
+      chatId: data.chatId,
+      title: data.title,
+      content: data.content,
+      emotion: data.emotion,
+      detailEmotion: data.detailEmotion,
+      additionalKeyword: data.additionalKeyword,
+      contentKeyword: data.contentKeyword,
+      createdAt: data.createdAt,
+    };
+  } catch (error) {
+    console.error('[fetchDiaryDetail] 일기 상세 조회 에러:', error);
+    return null;
+  }
+}
+
 

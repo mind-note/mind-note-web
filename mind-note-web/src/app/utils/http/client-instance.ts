@@ -9,8 +9,8 @@ export const createClientHttpInstance = (): AxiosInstance => {
   });
 
   instance.interceptors.request.use((config) => {
-    const token = Cookies.get('accessToken');
-    console.log('[Client Axios] accessToken:', token);
+    const token = Cookies.get('accessToken_client');
+    //console.log('[Client Axios] accessToken_client:', token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

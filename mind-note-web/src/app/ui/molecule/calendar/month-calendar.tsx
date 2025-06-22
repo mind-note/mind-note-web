@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import CalendarListItem from './calendar-client';
-
+import { emotionBgColors } from '@/app/ui/atom/emotion/emotion';
 
 type Record = {
   id: string;
@@ -44,7 +44,7 @@ export default function MonthCalendar({
   };
 
   return (
-    <div className="relative pb-20">
+    <div className="relative pb-20 px-6">
       <div className="text-center text-xl font-bold mb-4">
         {year}.{month.toString().padStart(2, '0')}
       </div>
@@ -56,13 +56,17 @@ export default function MonthCalendar({
         {daysArray.map((day, idx) => {
           if (!day) return <div key={idx} />;
           const record = dailyRecords.find((r) => r.date === day);
+
+          const emotionKey = record?.records[0]?.emotion?.toUpperCase(); // 예: 'HAPPY'
+          const emotionBg = emotionKey ? emotionBgColors[emotionKey] : 'bg-gray-200';
+          const textColor = record?.hasRecords ? 'text-white' : 'text-gray-500';
+
           return (
             <button
               key={idx}
               onClick={() => handleSelectDate(day)}
               className={`aspect-square flex items-center justify-center rounded-full
-                ${record?.hasRecords ? 'bg-birdGreen600 text-white' : 'bg-gray-200 text-gray-500'}
-                hover:scale-110 transition-transform`}
+                ${emotionBg} ${textColor} hover:scale-110 transition-transform`}
             >
               {day}
             </button>

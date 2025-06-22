@@ -12,8 +12,8 @@ export default async function ChatListPage() {
   const chats: ChatItem[] = await fetchChatList();
 
   return (
-    <div className="max-w-md mx-auto p-6">
-      <h1 className="text-xl font-semibold mb-4">💬 대화 목록</h1>
+    <div className="mx-auto p-6">
+      <h1 className="text-xl font-semibold mb-4">대화 목록</h1>
 
       <div className="space-y-4">
         {chats.map((chat) => (
@@ -32,7 +32,7 @@ export default async function ChatListPage() {
 
       <Link
         href="/chat/keywords"
-        className="mt-6 block w-full bg-purple-600 text-white text-center py-3 rounded-lg font-semibold"
+        className="mt-6 block w-full bg-black text-white text-center py-3 rounded-lg font-semibold"
       >
         + 새 대화 시작하기
       </Link>

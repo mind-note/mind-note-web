@@ -55,18 +55,11 @@ export default function ChatPage() {
   const handleSend = async (text: string) => {
     try {
       setSending(true);
-      const token = Cookies.get('accessToken');
-      if (!token) throw new Error('No access token');
-
-      const res = await axios.post(
+       const client = createClientHttpInstance();
+      
+      const res = await client.post(
         `${API_PATH}/chat/${chatId}/message`,
-        { content: text },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
+        { content: text }
       );
 
       const userMsg = res.data.userMessage;

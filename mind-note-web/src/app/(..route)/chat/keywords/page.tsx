@@ -79,16 +79,9 @@ export default function KeywordPage() {
 
         <button
           onClick={handleSubmit}
-          className="bg-purple-600 text-white py-3 rounded-lg text-sm font-semibold"
+          className="bg-black text-white py-3 rounded-lg text-sm font-semibold w-full"
         >
-          Save
-        </button>
-
-        <button
-          onClick={handleSubmit}
-          className="text-purple-500 text-sm text-center mt-[-8px]"
-        >
-          Skip and Save
+          채팅 시작하기
         </button>
       </div>
     </div>
